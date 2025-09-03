@@ -18,7 +18,6 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/places")
-@CrossOrigin("*")
 public class PlacesUtilController {
 
     private final PlaceService placeService;

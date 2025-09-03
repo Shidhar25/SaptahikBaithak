@@ -18,7 +18,6 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/users")
-@CrossOrigin("*")
 public class UserUtilController {
 
     private final MemberService memberService;

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,4 +30,24 @@ public interface PersonAssignmentRepository extends JpaRepository<PersonAssignme
             LocalDate startDate,
             LocalDate endDate
     );
+    // 🔹 All assignments within a date range
+    List<PersonAssignment> findByMeetingDateBetween(LocalDate startDate, LocalDate endDate);
+
+    // 🔹 Filter by person + date range
+    List<PersonAssignment> findByPerson_PersonIdAndMeetingDateBetween(
+            Long personId,
+            LocalDate startDate,
+            LocalDate endDate
+    );
+
+    // 🔹 Filter by place + date range
+    List<PersonAssignment> findByPlaceAndMeetingDateBetween(
+            Place place,
+            LocalDate startDate,
+            LocalDate endDate
+    );
+
+    // 🔹 Find by createdAt range (audit/logs)
+    List<PersonAssignment> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+
 }

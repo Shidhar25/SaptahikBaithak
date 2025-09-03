@@ -5,6 +5,7 @@ import com.baithak.assignment.dto.PlaceOverviewDto;
 import com.baithak.assignment.model.Person;
 import com.baithak.assignment.model.PersonAssignment;
 import com.baithak.assignment.model.Place;
+import com.baithak.assignment.repository.BaithakDetailsRepository;
 import com.baithak.assignment.repository.PersonAssignmentRepository;
 import com.baithak.assignment.repository.PersonRepository;
 import com.baithak.assignment.repository.PlacesRepository;
@@ -21,12 +22,13 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AssignmentService {
+public class AssignmentServiceImpl {
 
     private final PersonAssignmentRepository assignmentRepo;
     private final PersonRepository personRepo;
     private final PlacesRepository placesRepo;
 
+    private final BaithakDetailsRepository baithakDetailsRepository;
     /**
      * Get last 10 meetings for a person as DTOs (avoids Hibernate proxy issues)
      */
@@ -136,6 +138,44 @@ public class AssignmentService {
         PersonAssignment updated = assignmentRepo.save(assignment);
         return toDto(updated);
     }
+
+
+    // 🔹 History by meetingDate range
+    public List<AssignmentDto> getAssignmentHistory(LocalDate fromDate, LocalDate toDate) {
+        return assignmentRepo.findByMeetingDateBetween(fromDate, toDate)
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    // 🔹 History by person + meetingDate range
+    public List<AssignmentDto> getAssignmentHistoryByPerson(Long personId, LocalDate fromDate, LocalDate toDate) {
+        return assignmentRepo.findByPerson_PersonIdAndMeetingDateBetween(personId, fromDate, toDate)
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    // 🔹 History by place + meetingDate range
+    public List<AssignmentDto> getAssignmentHistoryByPlace(Long placeId, LocalDate fromDate, LocalDate toDate) {
+        Place place = new Place();
+        place.setPlaceId(placeId);
+        return assignmentRepo.findByPlaceAndMeetingDateBetween(place, fromDate, toDate)
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    // 🔹 Optional: History by createdAt range (audit/logging)
+    public List<AssignmentDto> getAssignmentHistoryByCreatedAt(LocalDateTime fromDateTime, LocalDateTime toDateTime) {
+        return assignmentRepo.findByCreatedAtBetween(fromDateTime, toDateTime)
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+
+//    History for excell
 
 
 }
