@@ -3,9 +3,9 @@ spring:
     name: assignment
 
   datasource:
-    url: jdbc:postgresql://baithak-db-baithakassi.c.aivencloud.com:25325/defaultdb?ssl=require
-    username: avnadmin
-    password: AVNS_FrR2dDp7cm-QZ3xK3ee
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/defaultdb}
+    username: ${DB_USERNAME:avnadmin}
+    password: ${DB_PASSWORD:password}
     driver-class-name: org.postgresql.Driver
 
     hikari:
@@ -24,7 +24,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 server:
-  port: 8082
+  port: ${PORT:8082}  # ✅ Uses Render's PORT env variable, fallback to 8082 locally
 
 logging:
   level:
